@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.yellow.birthdayreminder.MainActivity">
+
+    <TextView
+        android:id="@+id/name_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="姓名:"
+        android:textSize="18sp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <EditText
+        android:id="@+id/name_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="输入姓名"
+        android:textSize="17sp"
+        android:textColorHint="@color/guideLineGray"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/name_hint"
+        app:layout_constraintBottom_toBottomOf="@+id/name_hint"
+        app:layout_constraintTop_toTopOf="@id/name_hint"/>
+
+    <TextView
+        android:id="@+id/birthday_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="生日:"
+        android:textSize="18sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name_hint"/>
+    <EditText
+        android:id="@+id/birthday_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="输入生日"
+        android:textSize="17sp"
+        android:inputType="date"
+        android:textColorHint="@color/guideLineGray"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/birthday_hint"
+        app:layout_constraintBottom_toBottomOf="@+id/birthday_hint"
+        app:layout_constraintTop_toTopOf="@id/birthday_hint"/>
+
+    <TextView
+        android:id="@+id/gift_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="礼物:"
+        android:textSize="18sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/birthday_hint"/>
+    <EditText
+        android:id="@+id/gift_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="添加礼物"
+        android:textSize="17sp"
+        android:textColorHint="@color/guideLineGray"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/gift_hint"
+        app:layout_constraintBottom_toBottomOf="@+id/gift_hint"
+        app:layout_constraintTop_toTopOf="@id/gift_hint"/>
+
+    <Button
+        android:id="@+id/add_item_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="增加"
+        android:textSize="18sp"
+        android:layout_marginTop="30dp"
+        android:onClick="checkAndSave"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gift_hint"
+        />
+
+</android.support.constraint.ConstraintLayout>
