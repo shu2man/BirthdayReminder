@@ -63,11 +63,12 @@ public class MyDB extends SQLiteOpenHelper{
         db.close();
         //db.execSQL("insert into "+TABLE_NAME+" values(?,?,?)",new String[] {name,birth,gift});
     }
-    public void update(String name,String birth,String gift){
+    public void update(String name,String newName,String birth,String gift){
         SQLiteDatabase db=getWritableDatabase();
         String whereClause="name = ?";
         String[] whereArgs={name};
         ContentValues values=new ContentValues();
+        values.put("name",newName);
         values.put("birthday",birth);
         values.put("gift",gift);
         db.update(TABLE_NAME,values,whereClause,whereArgs);
@@ -97,6 +98,13 @@ public class MyDB extends SQLiteOpenHelper{
     public Cursor getAllofOne(String name){
         SQLiteDatabase db=getWritableDatabase();
         return db.rawQuery("select * from "+TABLE_NAME+" where name=?",new String[]{name});
+    }
+
+    public boolean isNameDuplicated(String name){
+        SQLiteDatabase db=getWritableDatabase();
+        //Cursor cursor=db.rawQuery("select * from "+TABLE_NAME+" where name=?",new String[]{name});
+        if(db.rawQuery("select * from "+TABLE_NAME+" where name=?",new String[]{name})==null) return false;
+        else return true;
     }
 
 }

@@ -24,8 +24,8 @@
         android:layout_marginStart="30dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-        android:id="@+id/name_view_dialog"
+    <EditText
+        android:id="@+id/name_edit_dialog"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="姓名"
@@ -56,7 +56,7 @@
         android:textSize="16sp"
         android:inputType="date"
         android:textColorHint="@color/guideLineGray"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="30dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/birthday_hint_dialog"
@@ -80,7 +80,7 @@
         android:hint="添加礼物"
         android:textSize="16sp"
         android:textColorHint="@color/guideLineGray"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="30dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/gift_hint_dialog"
@@ -91,7 +91,7 @@
         android:id="@+id/phone_hint_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="电话"
+        android:text="电话:"
         android:textSize="16sp"
         android:layout_marginTop="30dp"
         android:layout_marginStart="30dp"

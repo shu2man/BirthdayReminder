@@ -52,23 +52,45 @@ public class MainActivity extends AppCompatActivity {
         String phoneNumber="";
         int count=0;
         int isHas=0;
+        //query(Uri uri of target,String[] Colunms need to return as Cursor,String whereClause,
+        //     String[] whereArgs,String OrderBy ColunmName+"ASC/DESC"
         Cursor cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 null,null,null,null);//return
         if(cursor!=null){
+            while(cursor.moveToNext()){
+                String contact_name=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                if(contact_name.equals(name)){
+                    //phoneNumber=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    Cursor phone=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"=?",new String[]{name},null);
+                    //可能有多个号码，遍历
+                    while(phone!=null&&phone.moveToNext()){
+                        if(count>=1) phoneNumber+="\n";
+                        phoneNumber+= phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        count++;
+                    }
+                    if(phone!=null) phone.close();
+                }
+            }
+        }
+
+        /*if(cursor!=null){
             isHas=Integer.parseInt(
                     cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
         }
-        Cursor phone=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"="+name,null,null);
-        if(isHas!=0 &&phone!=null){
+        if(isHas!=0 ){
+            Cursor phone=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"="+name,null,null);
             //可能有多个号码，遍历
-            while(phone.moveToNext()){
+            while(phone!=null&&phone.moveToNext()){
                 if(count>=1) phoneNumber+="\n";
                 phoneNumber+= phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 count++;
             }
-            phone.close();
-        }
+            if(phone!=null) phone.close();
+        }*/
+
+
         if(cursor!=null) cursor.close();
         if(phoneNumber.equals("")) return "貌似你还没有Ta的联系方式哦";
         else return phoneNumber;
@@ -89,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView nametv=(TextView)findViewById(R.id.name);
-                TextView birthdaytv=(TextView)findViewById(R.id.birthday);
-                TextView gifttv=(TextView)findViewById(R.id.gift);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                TextView nametv=view.findViewById(R.id.name);
+                TextView birthdaytv=view.findViewById(R.id.birthday);
+                TextView gifttv=view.findViewById(R.id.gift);
                 String name=nametv.getText().toString();
                 String birthday=birthdaytv.getText().toString();
                 String gift=gifttv.getText().toString();
@@ -113,17 +135,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void dialogDetail(final String name,String birthday,String gift){
+    public void dialogDetail(final String name, String birthday, final String gift){
         LayoutInflater factor=LayoutInflater.from(MainActivity.this);
         View dialog=factor.inflate(R.layout.dialog_layout,null);
         final AlertDialog.Builder alertdialog=new AlertDialog.Builder(MainActivity.this);
         alertdialog.setView(dialog);
 
-        TextView nametv=dialog.findViewById(R.id.name_view_dialog);
-        EditText birthdayet=dialog.findViewById(R.id.birthday_edit_dialog);
-        EditText giftet=dialog.findViewById(R.id.gift_edit_dialog);
+        final EditText nameet=dialog.findViewById(R.id.name_edit_dialog);
+        final EditText birthdayet=dialog.findViewById(R.id.birthday_edit_dialog);
+        final EditText giftet=dialog.findViewById(R.id.gift_edit_dialog);
         TextView numbertv=dialog.findViewById(R.id.phone_number_dialog);
-        nametv.setText(name);
+        nameet.setText(name);
         birthdayet.setText(birthday);
         giftet.setText(gift);
         numbertv.setText(getPhoneNumber(name));
@@ -131,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         alertdialog.setPositiveButton("确认修改",new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                updateContact(name);
+                updateContact(name,nameet.getText().toString(),birthdayet.getText().toString(),giftet.getText().toString());
             }
         });
         alertdialog.setNegativeButton("放弃修改",null);
@@ -154,18 +176,17 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void updateContact(String name){
-        EditText birthet=(EditText)findViewById(R.id.birthday_edit_dialog);
-        EditText giftet=(EditText)findViewById(R.id.gift_edit_dialog);
-        String birthday=birthet.getText().toString();
-        String gift=giftet.getText().toString();
-        db.update(name,birthday,gift);
-        initListView();
+    public void updateContact(String name,String newName,String newBirthday,String newGift){
+        if(db.isNameDuplicated(newName)) Toast.makeText(MainActivity.this,"姓名重复，无法修改",Toast.LENGTH_SHORT).show();
+        else{
+            db.update(name,newName,newBirthday,newGift);
+            initListView();
+        }
     }
 
     public void verifyPermission(Activity activity){
         try{
-            int permission= ActivityCompat.checkSelfPermission(activity,"android.permission.READ_EXTERNAL_STORAGE");
+            int permission= ActivityCompat.checkSelfPermission(activity,"android.permission.READ_CONTACTS");
             if(permission!= PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(activity,PERMISSION_CONTACTS,1);
             }
