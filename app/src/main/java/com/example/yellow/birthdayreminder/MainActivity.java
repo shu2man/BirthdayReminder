@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     public String getPhoneNumber(String name){
         String phoneNumber="";
         int count=0;
-        int isHas=0;
         //query(Uri uri of target,String[] Colunms need to return as Cursor,String whereClause,
         //     String[] whereArgs,String OrderBy ColunmName+"ASC/DESC"
         Cursor cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             while(cursor.moveToNext()){
                 String contact_name=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 if(contact_name.equals(name)){
-                    //phoneNumber=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     Cursor phone=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                             null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"=?",new String[]{name},null);
                     //可能有多个号码，遍历
@@ -70,26 +68,10 @@ public class MainActivity extends AppCompatActivity {
                         count++;
                     }
                     if(phone!=null) phone.close();
+                    return phoneNumber;
                 }
             }
         }
-
-        /*if(cursor!=null){
-            isHas=Integer.parseInt(
-                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
-        }
-        if(isHas!=0 ){
-            Cursor phone=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"="+name,null,null);
-            //可能有多个号码，遍历
-            while(phone!=null&&phone.moveToNext()){
-                if(count>=1) phoneNumber+="\n";
-                phoneNumber+= phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                count++;
-            }
-            if(phone!=null) phone.close();
-        }*/
-
 
         if(cursor!=null) cursor.close();
         if(phoneNumber.equals("")) return "貌似你还没有Ta的联系方式哦";
@@ -177,7 +159,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateContact(String name,String newName,String newBirthday,String newGift){
-        if(db.isNameDuplicated(newName)) Toast.makeText(MainActivity.this,"姓名重复，无法修改",Toast.LENGTH_SHORT).show();
+        if((!name.equals(newName))&&db.isNameDuplicated(newName)) {
+            Toast.makeText(MainActivity.this,"姓名重复，无法修改",Toast.LENGTH_SHORT).show();
+        }
         else{
             db.update(name,newName,newBirthday,newGift);
             initListView();

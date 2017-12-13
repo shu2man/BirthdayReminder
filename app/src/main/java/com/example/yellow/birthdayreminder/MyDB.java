@@ -27,15 +27,12 @@ public class MyDB extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        //db.execSQL("drop table "+TABLE_NAME);
         String CREATE_TABLE="create table if not exists "+TABLE_NAME
                 +" (_id integer primarily key,"
                 +" name text,"
                 +" birthday text,"
                 +" gift text)";
         db.execSQL(CREATE_TABLE);
-
-        //createTable();
     }
     @Override
     public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion){
@@ -73,11 +70,11 @@ public class MyDB extends SQLiteOpenHelper{
         values.put("gift",gift);
         db.update(TABLE_NAME,values,whereClause,whereArgs);
         db.close();
-        /*db.execSQL("update table "+TABLE_NAME
+/*        db.execSQL("update table "+TABLE_NAME
                 +" set name="+newName
                 +" ,birth="+birth
                 +" ,gift="+gift
-                +" where name="+oldName);*/
+                +" where name="+name);*/
     }
     public void delete(String name){
         SQLiteDatabase db=getWritableDatabase();
@@ -102,9 +99,15 @@ public class MyDB extends SQLiteOpenHelper{
 
     public boolean isNameDuplicated(String name){
         SQLiteDatabase db=getWritableDatabase();
-        //Cursor cursor=db.rawQuery("select * from "+TABLE_NAME+" where name=?",new String[]{name});
-        if(db.rawQuery("select * from "+TABLE_NAME+" where name=?",new String[]{name})==null) return false;
-        else return true;
+        Cursor cursor=db.rawQuery("select name from "+TABLE_NAME,null);
+        while(cursor.moveToNext()){
+            if(cursor.getString(cursor.getColumnIndex("name")).equals(name)) return true;
+        }
+        cursor.close();
+        return false;
     }
 
+
+    //if(db.rawQuery("select * from "+TABLE_NAME+" where name=?",new String[]{name})==null) return false;
+    //else return true;
 }

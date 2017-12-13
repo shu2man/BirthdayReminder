@@ -1,10 +1,12 @@
 package com.example.yellow.birthdayreminder;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Yellow on 2017-12-10.
@@ -35,6 +37,15 @@ public class EditActivity extends Activity {
         String birthday=bet.getText().toString();
         String gift=get.getText().toString();
 
-        db.insert(name,birthday,gift);
+        if(db.isNameDuplicated(name)) Toast.makeText(this,"名字重复，请重新输入",Toast.LENGTH_SHORT).show();
+        else {
+            db.insert(name,birthday,gift);
+            Toast.makeText(this,name+"插入成功",Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void backToMain(View view){
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 }

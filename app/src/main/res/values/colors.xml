@@ -6,4 +6,5 @@
     <color name="realDark">#000000</color>
     <color name="guideLineGray">#d3d6d9</color>
     <color name="almostDark">#636668</color>
+    <color name="buttonBGC">#e78bd5c5</color>
 </resources>
