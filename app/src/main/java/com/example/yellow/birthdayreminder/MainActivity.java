@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView nametv=(TextView)findViewById(R.id.name);
+                TextView nametv=view.findViewById(R.id.name);
                 String name=nametv.getText().toString();
 
                 dialogDelete(name);
